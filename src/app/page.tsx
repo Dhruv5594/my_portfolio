@@ -13,6 +13,7 @@ import { ProjectsSection } from "@/components/sections/Projects";
 import { ExperienceSection } from "@/components/sections/Experience";
 import { CertificationsSection } from "@/components/sections/Certifications";
 import { ContactSection } from "@/components/sections/Contact";
+import { AIDhruvChat } from "@/components/ui/AIDhruvChat";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
@@ -70,6 +71,9 @@ export default function Home() {
         </main>
 
         <Footer />
+
+        {/* AI Dhruv Interactive Copilot */}
+        <AIDhruvChat />
       </div>
     </>
   );
