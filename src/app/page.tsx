@@ -10,10 +10,13 @@ import { HeroSection } from "@/components/sections/Hero";
 import { AboutSection } from "@/components/sections/About";
 import { SkillsSection } from "@/components/sections/Skills";
 import { ProjectsSection } from "@/components/sections/Projects";
+import { GitHubDashboard } from "@/components/sections/GitHubDashboard";
 import { ExperienceSection } from "@/components/sections/Experience";
 import { CertificationsSection } from "@/components/sections/Certifications";
 import { ContactSection } from "@/components/sections/Contact";
 import { AIDhruvChat } from "@/components/ui/AIDhruvChat";
+import { DevTerminal } from "@/components/ui/DevTerminal";
+import { MatrixMode } from "@/components/ui/MatrixMode";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
@@ -41,14 +44,17 @@ export default function Home() {
 
   return (
     <>
-      {/* Page loader — shows first, then reveals the site */}
+      {/* Page loader — reveals the site with smooth entrance */}
       <PageLoader onComplete={() => setLoaded(true)} />
 
-      {/* Custom cursor (desktop only) */}
+      {/* Custom spring cursor (desktop only) */}
       <CustomCursor />
 
       {/* Command palette (Ctrl+K) */}
       <CommandPalette />
+
+      {/* Secret Cyber Matrix Mode Canvas (Triggered via terminal 'matrix' or Konami Code) */}
+      <MatrixMode />
 
       {/* Main site content */}
       <div
@@ -65,12 +71,16 @@ export default function Home() {
           <AboutSection />
           <SkillsSection />
           <ProjectsSection />
+          <GitHubDashboard />
           <ExperienceSection />
           <CertificationsSection />
           <ContactSection />
         </main>
 
         <Footer />
+
+        {/* Interactive Developer Terminal (`_~) */}
+        <DevTerminal />
 
         {/* AI Dhruv Interactive Copilot */}
         <AIDhruvChat />

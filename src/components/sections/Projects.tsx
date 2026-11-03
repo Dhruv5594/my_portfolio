@@ -2,13 +2,22 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ExternalLink, Eye } from "lucide-react";
+import { ExternalLink, Eye, Layers } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import { projects } from "@/data/portfolio";
 import { ProjectModal } from "@/components/ui/ProjectModal";
+import { ProjectArchitectureModal } from "@/components/ui/ProjectArchitectureModal";
 import type { Project } from "@/types";
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({
+  project,
+  index,
+  onOpenArchitecture,
+}: {
+  project: Project;
+  index: number;
+  onOpenArchitecture: (id: string) => void;
+}) {
   const [hovered, setHovered] = useState(false);
   const [selected, setSelected] = useState<Project | null>(null);
 
@@ -35,7 +44,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             }}
           />
 
-          {/* Title badge in card image area */}
+          {/* Title initial badge in card image area */}
           <div
             className="relative font-display text-5xl font-bold opacity-10 select-none transition-all duration-500 group-hover:opacity-20 group-hover:scale-110"
             style={{ color: project.color }}
@@ -58,52 +67,53 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             }`}
           >
             <button
-              onClick={() => setSelected(project)}
-              className="flex items-center gap-1.5 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-sm text-white font-medium hover:bg-white/20 transition-colors"
+              onClick={() => onOpenArchitecture(project.id)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/80 hover:bg-black text-white text-xs font-medium border border-white/20 transition-all hover:scale-105 cursor-pointer shadow-lg"
             >
-              <Eye size={14} /> Preview
+              <Layers size={13} className="text-violet-400" />
+              <span>Architecture</span>
+            </button>
+            <button
+              onClick={() => setSelected(project)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/80 hover:bg-black text-white text-xs font-medium border border-white/20 transition-all hover:scale-105 cursor-pointer shadow-lg"
+            >
+              <Eye size={13} />
+              <span>Details</span>
             </button>
           </div>
         </div>
 
-        {/* Card body */}
-        <div className="flex flex-col flex-1 p-5 space-y-4">
-          <div>
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block group/title"
-              onClick={(e) => e.stopPropagation()}
-              title="Open GitHub Repository"
-            >
-              <h3 className="font-display text-xl font-bold text-white group-hover/title:text-violet-400 transition-colors flex items-center gap-1.5">
-                {project.title}
-                <span className="text-xs text-white/30 group-hover/title:text-violet-400 transition-colors">↗</span>
-              </h3>
-            </a>
-            <p className="mt-1.5 text-sm text-white/50 line-clamp-2">{project.description}</p>
-          </div>
+        {/* Card content */}
+        <div className="flex flex-col flex-1 p-6">
+          <h3 className="font-display text-xl font-bold text-white group-hover:text-violet-300 transition-colors duration-200">
+            {project.title}
+          </h3>
+
+          <p className="mt-1 text-xs text-violet-400/80 font-mono">{project.tagline}</p>
+
+          <p className="mt-3 text-sm text-white/50 leading-relaxed flex-1 line-clamp-3">
+            {project.description}
+          </p>
 
           {/* Tech tags */}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 my-4">
             {project.tech.slice(0, 4).map((t) => (
               <span
                 key={t}
-                className="text-xs px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-md text-white/50"
+                className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-white/[0.04] text-white/60 border border-white/5"
               >
                 {t}
               </span>
             ))}
             {project.tech.length > 4 && (
-              <span className="text-xs px-2.5 py-0.5 text-white/30">
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-white/[0.04] text-white/40">
                 +{project.tech.length - 4} more
               </span>
             )}
           </div>
 
           {/* Link buttons */}
-          <div className="flex items-center gap-2 pt-1 mt-auto">
+          <div className="flex items-center gap-2 pt-2 mt-auto border-t border-white/5">
             <a
               href={project.github}
               target="_blank"
@@ -113,20 +123,18 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             >
               <FaGithub size={13} /> Code
             </a>
-            {project.live !== "#" && (
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-xs text-white/70 hover:text-violet-400 bg-white/5 hover:bg-white/10 border border-white/10 px-2.5 py-1.5 rounded-lg transition-all"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <ExternalLink size={13} /> Live
-              </a>
-            )}
+
+            <button
+              type="button"
+              onClick={() => onOpenArchitecture(project.id)}
+              className="flex items-center gap-1.5 text-xs text-violet-300 hover:text-white bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/30 px-2.5 py-1.5 rounded-lg transition-all cursor-pointer"
+            >
+              <Layers size={13} className="text-violet-400" /> System Design
+            </button>
+
             <button
               onClick={() => setSelected(project)}
-              className="ml-auto text-xs text-violet-400/80 hover:text-violet-300 font-medium transition-colors cursor-pointer"
+              className="ml-auto text-xs text-white/40 hover:text-white font-medium transition-colors cursor-pointer"
             >
               Details →
             </button>
@@ -140,6 +148,22 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 export function ProjectsSection() {
+  const [filter, setFilter] = useState("all");
+  const [architectureModalId, setArchitectureModalId] = useState<string | null>(null);
+
+  const categories = [
+    { id: "all", label: "All Projects" },
+    { id: "mern", label: "Full-Stack (MERN)" },
+    { id: "ai", label: "AI & Machine Learning" },
+  ];
+
+  const filteredProjects = projects.filter((p) => {
+    if (filter === "all") return true;
+    if (filter === "mern") return p.category.includes("MERN");
+    if (filter === "ai") return p.category.includes("AI");
+    return true;
+  });
+
   return (
     <section id="projects" className="relative py-24 lg:py-32">
       {/* Background accent */}
@@ -154,42 +178,53 @@ export function ProjectsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          className="mb-12 text-center"
         >
           <span className="font-mono text-sm text-violet-400 tracking-widest uppercase">Projects</span>
           <h2 className="mt-2 font-display text-4xl sm:text-5xl font-bold text-white">
-            Things I've Built
+            Featured Systems
           </h2>
-          <p className="mt-4 text-white/50 max-w-xl mx-auto">
-            A collection of projects that showcase my skills across the stack — from full-stack apps to AI systems.
+          <p className="mt-4 text-white/50 max-w-xl mx-auto text-sm">
+            Production-grade full-stack platforms and AI applications built with modern architectural rigor.
           </p>
+
+          {/* Category Filter Tabs */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setFilter(cat.id)}
+                className={`px-4 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+                  filter === cat.id
+                    ? "bg-violet-600 text-white shadow-[0_0_20px_rgba(124,58,237,0.4)] border border-violet-400"
+                    : "bg-white/[0.03] text-white/50 hover:text-white border border-white/8 hover:border-white/20"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </motion.div>
 
-        {/* Project cards grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto gap-6">
-          {projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+        {/* Projects grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProjects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+              onOpenArchitecture={(id) => setArchitectureModalId(id)}
+            />
           ))}
         </div>
-
-        {/* GitHub CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="mt-12 text-center"
-        >
-          <a
-            href="https://github.com/Dhruv5594"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-violet-400 transition-colors border border-white/10 hover:border-violet-500/30 rounded-xl px-5 py-2.5"
-          >
-            <FaGithub size={15} /> See all projects on GitHub
-          </a>
-        </motion.div>
       </div>
+
+      {/* System Architecture Modal */}
+      <ProjectArchitectureModal
+        projectId={architectureModalId}
+        onClose={() => setArchitectureModalId(null)}
+      />
     </section>
   );
 }
